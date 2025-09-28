@@ -1,10 +1,10 @@
 package farmacia_Produto;
 
 import java.util.Scanner;
-
-import farmacia.model.Produto;
+import farmacia.model.Medicamento;
+import farmacia.controller.ProdutoController;
+import farmacia.model.Cosmetico;
 import farmacia.util.Cores_farmacia.Cores;
-
 
 public class Menu_farmacia {
 
@@ -12,22 +12,32 @@ public class Menu_farmacia {
 		
 		public static void main(String[] args) {
 			
-			int opcao;
 			
-			// Produto
-			
-			Produto p1 = new Produto(1, "Dipirona", 1, 29.90f);
-			Produto p2 = new Produto(2, "Shampoo Seda", 2, 5.90f);
-			
-			p1.visualizar();
-			p2.visualizar();
+			ProdutoController produtos = new ProdutoController();
 
+			
+			// Produtos iniciais
+			
+				Medicamento p1 = new Medicamento(1, "Dipirona", 1, 29.90f, "Sem tarja");
+		        Cosmetico p2 = new Cosmetico(2, "Seda Ceramidas", 2, 5.90f, "Shampoo");
+		        Medicamento p3 = new Medicamento(3, "Rivotril", 1, 85.90f, "Tarja preta");
+		        Cosmetico p4 = new Cosmetico (4, "Dove", 2, 6.99f, "Sabonete");
+		        Medicamento p5 = new Medicamento(5, "Yasmin", 1, 80.90f, "Sem tarja");
+
+		        produtos.criarProduto(p1);
+		        produtos.criarProduto(p2);
+		        produtos.criarProduto(p3);
+		        produtos.criarProduto(p4);
+		        produtos.criarProduto(p5);
+
+		        int opcao;
+		        
 			while (true) {
 
 				System.out.println(Cores.TEXT_PURPLE_BOLD_BRIGHT + Cores. ANSI_CYAN_BACKGROUND
 						+ "*****************************************************");
 				System.out.println("                                                     ");
-				System.out.println("          Anubi's Pharm                  ");
+				System.out.println("          Anubi's Pharm                              ");
 				System.out.println("                                                     ");
 				System.out.println("*****************************************************");
 				System.out.println("                                                     ");
@@ -48,41 +58,83 @@ public class Menu_farmacia {
 		
 
 				if (opcao == 0) {
-					System.out.println(Cores.TEXT_WHITE_BOLD + "\nFarmácia Bem-Estar - Medicamento Barato é aqui!");
+					System.out.println(Cores.TEXT_WHITE_BOLD + "\nAnubi's Pharm - Medicamento Barato você encontra aqui!");
 					sobre();
 					leia.close();
 					System.exit(0);
 				}
 
 				switch (opcao) {
-				case 1:
-					System.out.println(Cores.TEXT_WHITE + "Criar Produto\n\n");
+                case 1 -> {
+                    System.out.println(Cores.TEXT_WHITE + "Criar Produto\n");
 
-					break;
-				case 2:
-					System.out.println(Cores.TEXT_WHITE + "Listar todas as Produtos\n\n");
+                    System.out.print("Informe o tipo (1-Medicamento, 2-Cosmético): ");
+                    int tipo = leia.nextInt();
+                    leia.nextLine();
 
-					break;
-				case 3:
-					System.out.println(Cores.TEXT_WHITE + "Consultar dados da Produto - por id\n\n");
+                    System.out.print("Nome: ");
+                    String nome = leia.nextLine();
 
-					break;
-				case 4:
-					System.out.println(Cores.TEXT_WHITE + "Atualizar dados da Produto\n\n");
+                    System.out.print("Preço: ");
+                    float preco = leia.nextFloat();
+                    leia.nextLine();
 
-					break;
-				case 5:
-					System.out.println(Cores.TEXT_WHITE + "Apagar a Produto\n\n");
+                    if (tipo == 1) {
+                        System.out.print("Tarja: ");
+                        String tarja = leia.nextLine();
+                        produtos.criarProduto(new Medicamento(produtos.getProximoId(), nome, tipo, preco, tarja));
+                    } else {
+                        System.out.print("Categoria: ");
+                        String categoria = leia.nextLine();
+                        produtos.criarProduto(new Cosmetico(produtos.getProximoId(), nome, tipo, preco, categoria));
+                    }
+                }
+                case 2 -> {
+                    System.out.println(Cores.TEXT_WHITE + "Listando todos os Produtos\n");
+                    produtos.listarTodos();
+                }
+                case 3 -> {
+                    System.out.print("Informe o ID do produto: ");
+                    int id = leia.nextInt();
+                    produtos.consultarPorId(id);
+                }
+                case 4 -> {
+                    System.out.print("Informe o ID do produto a atualizar: ");
+                    int id = leia.nextInt();
+                    leia.nextLine();
 
-					break;
-				default:
-					System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida!\n" + Cores.TEXT_RESET);
-					
-					break;
-				}
-			}
+                    System.out.print("Novo nome: ");
+                    String nome = leia.nextLine();
 
-		}
+                    System.out.print("Novo preço: ");
+                    float preco = leia.nextFloat();
+                    leia.nextLine();
+
+                    System.out.print("Tipo (1-Medicamento, 2-Cosmético): ");
+                    int tipo = leia.nextInt();
+                    leia.nextLine();
+
+                    if (tipo == 1) {
+                        System.out.print("Tarja: ");
+                        String tarja = leia.nextLine();
+                        produtos.atualizarProduto(new Medicamento(id, nome, tipo, preco, tarja));
+                    } else {
+                        System.out.print("Categoria: ");
+                        String categoria = leia.nextLine();
+                        produtos.atualizarProduto(new Cosmetico(id, nome, tipo, preco, categoria));
+                    }
+                }
+                case 5 -> {
+                    System.out.print("Informe o ID do produto a deletar: ");
+                    int id = leia.nextInt();
+                    produtos.deletarProduto(id);
+                }
+                default -> {
+                    System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida!\n" + Cores.TEXT_RESET);
+                }
+            }
+        }
+    }
 
 		public static void sobre() {
 			System.out.println("\n*********************************************************");

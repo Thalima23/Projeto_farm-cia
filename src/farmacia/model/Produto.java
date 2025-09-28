@@ -1,6 +1,6 @@
 package farmacia.model;
 
-public class Produto {
+public abstract class Produto {
 
 
 		private int id;
@@ -14,7 +14,7 @@ public class Produto {
 			this.tipo = tipo;
 			this.preco = preco;
 		}
-
+		// Get e Setters
 		public int getId() {
 			return id;
 		}
@@ -47,6 +47,7 @@ public class Produto {
 			this.preco = preco;
 		}
 		
+		// Método visualizar 
 		public void visualizar() {
 
 			String tipo = "";
